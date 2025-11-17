@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Payment Method - PiCloud</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f8;
+            color: #1f2937;
+            line-height: 1.6;
+            margin: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0,0,0,.08);
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #007bff;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        .back-link:hover {
+            color: #0056b3;
+        }
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #111;
+        }
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+        }
+        select, input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        select:focus, input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0,123,255,.1);
+        }
+        .btn-primary {
+            background: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+        .payment-icons {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        .payment-icon {
+            font-size: 1.5rem;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .security-note {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 0.9rem;
+            color: #1e40af;
+        }
+        .messages {
+            margin-bottom: 20px;
+        }
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .card-preview {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .card-preview::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            transform: rotate(25deg);
+        }
+        .card-number {
+            font-family: monospace;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            margin: 15px 0;
+        }
+        .card-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header style="position:sticky;top:0;z-index:50;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.05)">
+        <div style="max-width:1180px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between">
+            <div style="display:flex;align-items:center;gap:10px;font-weight:700;color:#007bff">
+                <a href="{% url 'index' %}" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px;">
+                    ☁️ <span style="font-size:1.1rem;color:#222">PiCloud</span>
+                </a>
+            </div>
+            <nav style="display:flex;gap:18px;align-items:center">
+                <a href="{% url 'index' %}" style="color:#444;text-decoration:none">Home</a>
+                <a href="{% url 'profile' %}" style="color:#444;text-decoration:none">Profile</a>
+                <a href="{% url 'subscription_plans' %}" style="color:#007bff;font-weight:600;text-decoration:none">Plans</a>
+                <a href="{% url 'support' %}" style="color:#444;text-decoration:none">Support</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <a href="{% url 'payment_methods' %}" class="back-link">
+            ← Back to Payment Methods
+        </a>
+
+        <div class="card">
+            <h1>Add Payment Method</h1>
+            <p class="subtitle">Securely add your payment method to upgrade your storage plan</p>
+
+            <!-- Messages -->
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Payment Method Icons -->
+            <div class="payment-icons">
+                <span class="payment-icon">💳</span> Credit Card
+                <span class="payment-icon">🏦</span> Debit Card  
+                <span class="payment-icon">📱</span> Google Pay
+                <span class="payment-icon">📲</span> PhonePe
+                <span class="payment-icon">🔗</span> UPI
+                <span class="payment-icon">🏛️</span> Net Banking
+                <span class="payment-icon">🔵</span> Visa
+                <span class="payment-icon">🟠</span> MasterCard
+            </div>
+
+            <!-- Card Preview -->
+            <div class="card-preview">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="font-size: 0.8rem; opacity: 0.8;">PREVIEW</div>
+                    <div style="font-size: 1.5rem;">••••</div>
+                </div>
+                <div class="card-number" id="cardNumberPreview">•••• •••• •••• ••••</div>
+                <div class="card-info">
+                    <div>
+                        <div style="font-size: 0.7rem; opacity: 0.8;">CARD HOLDER</div>
+                        <div id="cardHolderPreview">{{ user.get_full_name|default:user.username }}</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.7rem; opacity: 0.8;">EXPIRES</div>
+                        <div>••/••</div>
+                    </div>
+                </div>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="payment_type">Payment Method Type</label>
+                    <select name="payment_type" id="payment_type" required onchange="updateCardPreview()">
+                        <option value="">Select a payment method</option>
+                        <option value="credit_card">Credit Card</option>
+                        <option value="debit_card">Debit Card</option>
+                        <option value="google_pay">Google Pay</option>
+                        <option value="phonepe">PhonePe</option>
+                        <option value="upi">UPI</option>
+                        <option value="net_banking">Net Banking</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="provider">Provider / Bank Name</label>
+                    <select name="provider" id="provider" required onchange="updateCardPreview()">
+                        <option value="">Select provider</option>
+                        <option value="Visa">Visa</option>
+                        <option value="MasterCard">MasterCard</option>
+                        <option value="American Express">American Express</option>
+                        <option value="RuPay">RuPay</option>
+                        <option value="HDFC Bank">HDFC Bank</option>
+                        <option value="ICICI Bank">ICICI Bank</option>
+                        <option value="State Bank of India">State Bank of India</option>
+                        <option value="Axis Bank">Axis Bank</option>
+                        <option value="Google Pay">Google Pay</option>
+                        <option value="PhonePe">PhonePe</option>
+                        <option value="Paytm">Paytm</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="lastFourGroup">
+                    <label for="last_four">Last 4 Digits (Optional)</label>
+                    <input type="text" name="last_four" id="last_four" maxlength="4" placeholder="1234" 
+                           pattern="[0-9]{4}" oninput="updateCardPreview()">
+                    <small style="color: #6b7280; font-size: 0.8rem;">For card identification purposes only</small>
+                </div>
+
+                <div class="security-note">
+                    🔒 <strong>Your payment information is secure</strong><br>
+                    We use industry-standard encryption to protect your data. 
+                    Your payment details are never stored on our servers.
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    Add Payment Method
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function updateCardPreview() {
+            const paymentType = document.getElementById('payment_type').value;
+            const provider = document.getElementById('provider').value;
+            const lastFour = document.getElementById('last_four').value;
+            
+            // Update card number preview
+            const cardNumberPreview = document.getElementById('cardNumberPreview');
+            if (lastFour && lastFour.length === 4) {
+                cardNumberPreview.textContent = `•••• •••• •••• ${lastFour}`;
+            } else {
+                cardNumberPreview.textContent = '•••• •••• •••• ••••';
+            }
+            
+            // Show/hide last four field based on payment type
+            const lastFourGroup = document.getElementById('lastFourGroup');
+            if (paymentType === 'credit_card' || paymentType === 'debit_card') {
+                lastFourGroup.style.display = 'block';
+            } else {
+                lastFourGroup.style.display = 'none';
+            }
+        }
+
+        // Initialize the form
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCardPreview();
+        });
+
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const paymentType = document.getElementById('payment_type').value;
+            const provider = document.getElementById('provider').value;
+            
+            if (!paymentType || !provider) {
+                e.preventDefault();
+                alert('Please fill in all required fields.');
+                return false;
+            }
+            
+            const lastFour = document.getElementById('last_four').value;
+            if (lastFour && !/^\d{4}$/.test(lastFour)) {
+                e.preventDefault();
+                alert('Please enter a valid 4-digit number for last four digits.');
+                return false;
+            }
+        });
+    </script>
+</body>
+</html>

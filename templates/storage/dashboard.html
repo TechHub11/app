@@ -1,0 +1,249 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PiCloud – Secure Personal Cloud</title>
+</head>
+
+<body style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:#f4f6f8;color:#1f2937;line-height:1.6;margin:0;padding:0">
+  <!-- ===== Header ===== -->
+  <header style="position:sticky;top:0;z-index:50;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.05)">
+    <div style="max-width:1180px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;padding:14px 0">
+      <div style="display:flex;align-items:center;gap:10px;font-weight:700;color:#007bff">☁️ <span style="font-size:1.1rem;color:#222">PiCloud</span></div>
+      <nav style="display:flex;gap:18px;align-items:center">
+        <a href="#features" class="auth-check" style="color:#444;text-decoration:none">Features</a>
+        <a href="#security" class="auth-check" style="color:#444;text-decoration:none">Security</a>
+        <a href="#pricing" class="auth-check" style="color:#444;text-decoration:none">Pricing</a>
+        <a href="#faq" class="auth-check" style="color:#444;text-decoration:none">FAQ</a>
+        <a href="{% url 'index' %}" class="auth-check" style="display:inline-flex;align-items:center;gap:8px;background:#007bff;color:#fff;border:none;border-radius:10px;padding:10px 16px;cursor:pointer;box-shadow:0 10px 25px rgba(0,0,0,.08);font-weight:600;text-decoration:none">
+          Get started
+        </a>
+    {% if user.is_authenticated %}
+  <a href="{% url 'profile' %}">
+    <img class="avatar"
+     src="{{ user.profile.image.url }}"
+     alt="{{ user.username }}"
+     style="width:40px;height:40px;border-radius:50%;"/>
+     
+
+  </a>  
+{% endif %}
+    
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== Hero ===== -->
+  <section style="background:linear-gradient(180deg,#e9f3ff,rgba(233,243,255,0));padding:72px 0 36px">
+    <div style="max-width:1180px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1.1fr .9fr;gap:36px;align-items:center">
+      <div>
+        <span style="display:inline-flex;align-items:center;gap:8px;background:#eef2ff;color:#3b82f6;border-radius:999px;padding:6px 12px;font-size:.9rem;font-weight:600">New • Personal cloud, reimagined</span>
+        <h1 style="font-size:2.8rem;line-height:1.15;margin:14px 0 10px;color:#111">Store, share, and access anything — fast, private, and on your terms.</h1>
+        <p style="color:#4b5563;font-size:1.1rem;margin-bottom:20px">PiCloud is your secure home for files, photos, and backups. Keep everything organized with powerful search, smart folders, and end-to-end encryption.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <a href="{% url 'index' %}" class="auth-check" style="display:inline-flex;align-items:center;gap:8px;background:#007bff;color:#fff;border:none;border-radius:10px;padding:10px 16px;cursor:pointer;box-shadow:0 10px 25px rgba(0,0,0,.08);font-weight:600;text-decoration:none">
+            Try PiCloud free
+          </a>
+          <a href="#video" class="auth-check" style="display:inline-flex;align-items:center;gap:8px;background:#eef2ff;color:#007bff;border:none;border-radius:10px;padding:10px 16px;cursor:pointer;box-shadow:0 10px 25px rgba(0,0,0,.08);font-weight:600;text-decoration:none">
+            Watch demo ▶
+          </a>
+        </div>
+        <p style="font-size:.9rem;color:#6b7280;margin-top:10px">Free 15 GB • No credit card • Cancel anytime</p>
+      </div>
+      <div style="border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,.08);overflow:hidden;background:#fff">
+        <div style="display:flex;gap:8px;padding:10px;background:#f3f4f6">
+          <span style="width:10px;height:10px;border-radius:50%;background:#ff6b6b"></span>
+          <span style="width:10px;height:10px;border-radius:50%;background:#ffd166"></span>
+          <span style="width:10px;height:10px;border-radius:50%;background:#06d6a0"></span>
+        </div>
+        <img src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=1470&auto=format&fit=crop" alt="App preview" style="max-width:100%;display:block"/>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Social proof ===== -->
+  <section style="padding:22px 0 8px;color:#6b7280">
+    <div style="max-width:1180px;margin:0 auto;padding:0 20px">
+      <p>Trusted by teams and creators worldwide</p>
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:18px;opacity:.85">
+        <img alt="logo" src="https://dummyimage.com/120x36/ddd/555&text=Acme" style="max-width:100%;display:block"/>
+        <img alt="logo" src="https://dummyimage.com/120x36/ddd/555&text=Zento" style="max-width:100%;display:block"/>
+        <img alt="logo" src="https://dummyimage.com/120x36/ddd/555&text=Nimbus" style="max-width:100%;display:block"/>
+        <img alt="logo" src="https://dummyimage.com/120x36/ddd/555&text=Orbit" style="max-width:100%;display:block"/>
+        <img alt="logo" src="https://dummyimage.com/120x36/ddd/555&text=Atlas" style="max-width:100%;display:block"/>
+        <img alt="logo" src="https://dummyimage.com/120x36/ddd/555&text=Pulse" style="max-width:100%;display:block"/>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Features ===== -->
+  <section id="features" style="padding:56px 0">
+    <div style="max-width:1180px;margin:0 auto;padding:0 20px">
+      <h2 style="font-size:1.9rem;margin-bottom:10px">Everything you need in one place</h2>
+      <p style="color:#4b5563;max-width:720px">Powerful tools designed to keep you productive: upload instantly, organize with smart folders, and share securely with granular permissions.</p>
+      <div style="margin-top:26px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px">
+        <div style="background:#fff;padding:18px;border-radius:14px;box-shadow:0 10px 25px rgba(0,0,0,.08);transition:transform .15s ease">
+          <div style="display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:12px;background:#eef2ff;color:#3b82f6;font-weight:700">🔐</div>
+          <h3 style="font-size:1.05rem;margin:8px 0;color:#111">End-to-end encryption</h3>
+          <p style="color:#6b7280;font-size:.95rem">Your files are encrypted on your device before they leave it — only you hold the keys.</p>
+        </div>
+        <div style="background:#fff;padding:18px;border-radius:14px;box-shadow:0 10px 25px rgba(0,0,0,.08);transition:transform .15s ease">
+          <div style="display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:12px;background:#eef2ff;color:#3b82f6;font-weight:700">⚡</div>
+          <h3 style="font-size:1.05rem;margin:8px 0;color:#111">Blazing-fast upload</h3>
+          <p style="color:#6b7280;font-size:.95rem">Multi-part uploads and global edge acceleration keep transfers snappy.</p>
+        </div>
+        <div style="background:#fff;padding:18px;border-radius:14px;box-shadow:0 10px 25px rgba(0,0,0,.08);transition:transform .15s ease">
+          <div style="display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:12px;background:#eef2ff;color:#3b82f6;font-weight:700">🗂️</div>
+          <h3 style="font-size:1.05rem;margin:8px 0;color:#111">Smart organization</h3>
+          <p style="color:#6b7280;font-size:.95rem">Auto-tag, favorites, and recent views make finding files effortless.</p>
+        </div>
+        <div style="background:#fff;padding:18px;border-radius:14px;box-shadow:0 10px 25px rgba(0,0,0,.08);transition:transform .15s ease">
+          <div style="display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:12px;background:#eef2ff;color:#3b82f6;font-weight:700">🔎</div>
+          <h3 style="font-size:1.05rem;margin:8px 0;color:#111">Powerful search</h3>
+          <p style="color:#6b7280;font-size:.95rem">Instantly search by file name, type, or content with OCR for images and PDFs.</p>
+        </div>
+        <div style="background:#fff;padding:18px;border-radius:14px;box-shadow:0 10px 25px rgba(0,0,0,.08);transition:transform .15s ease">
+          <div style="display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:12px;background:#eef2ff;color:#3b82f6;font-weight:700">👥</div>
+          <h3 style="font-size:1.05rem;margin:8px 0;color:#111">Share with control</h3>
+          <p style="color:#6b7280;font-size:.95rem">Password links, view-only, and expiry dates — you decide how content is shared.</p>
+        </div>
+        <div style="background:#fff;padding:18px;border-radius:14px;box-shadow:0 10px 25px rgba(0,0,0,.08);transition:transform .15s ease">
+          <div style="display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:12px;background:#eef2ff;color:#3b82f6;font-weight:700">📱</div>
+          <h3 style="font-size:1.05rem;margin:8px 0;color:#111">Every device</h3>
+          <p style="color:#6b7280;font-size:.95rem">Use PiCloud on desktop, tablet, or mobile — anywhere, anytime.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Security highlight ===== -->
+  <section id="security" style="padding:56px 0">
+    <div style="max-width:1180px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1.05fr .95fr;gap:26px;align-items:center">
+      <div style="background:#fff;padding:20px;border-radius:14px;box-shadow:0 10px 25px rgba(0,0,0,.08)">
+        <h2 style="font-size:1.9rem;margin-bottom:10px">Privacy first by design</h2>
+        <p style="color:#6b7280;font-size:.95rem">We never sell your data. Encryption, 2-factor authentication, and zero-knowledge architecture put you in control.</p>
+        <ul style="margin-top:10px;display:grid;gap:10px;padding-left:0">
+          <li style="list-style:none;display:flex;gap:10px">✅ Zero-knowledge encryption</li>
+          <li style="list-style:none;display:flex;gap:10px">✅ 2FA with authenticator apps</li>
+          <li style="list-style:none;display:flex;gap:10px">✅ Encrypted file sharing</li>
+          <li style="list-style:none;display:flex;gap:10px">✅ EU & regional storage options</li>
+        </ul>
+      </div>
+      <div style="border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,.08);overflow:hidden;background:#fff">
+        <div style="display:flex;gap:8px;padding:10px;background:#f3f4f6">
+          <span style="width:10px;height:10px;border-radius:50%;background:#ff6b6b"></span>
+          <span style="width:10px;height:10px;border-radius:50%;background:#ffd166"></span>
+          <span style="width:10px;height:10px;border-radius:50%;background:#06d6a0"></span>
+        </div>
+        <img src="https://images.unsplash.com/photo-1525182008055-f88b95ff7980?q=80&w=1470&auto=format&fit=crop" alt="Security" style="max-width:100%;display:block"/>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Pricing (teaser) ===== -->
+  <section id="pricing" style="padding:56px 0">
+    <div style="max-width:1180px;margin:0 auto;padding:0 20px;background:linear-gradient(180deg,rgba(0,123,255,.06),rgba(0,123,255,0));border-radius:18px;padding:22px;box-shadow:0 10px 25px rgba(0,0,0,.08)">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+        <div>
+          <h2 style="font-size:1.9rem;margin-bottom:10px">Simple, transparent pricing</h2>
+          <p style="color:#6b7280;font-size:.95rem">Start free. Upgrade only when you need more space and features.</p>
+        </div>
+        <a href="{% url 'register' %}" style="display:inline-flex;align-items:center;gap:8px;background:#007bff;color:#fff;border:none;border-radius:10px;padding:10px 16px;cursor:pointer;box-shadow:0 10px 25px rgba(0,0,0,.08);font-weight:600;text-decoration:none">Create free account</a>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:14px">
+        <div style="background:#fff;border:1px solid #eef2ff;border-radius:14px;padding:18px">
+          <h3 style="margin-bottom:8px">Free</h3>
+          <strong style="font-size:1.4rem;color:#111">15 GB</strong>
+          <p style="color:#6b7280;font-size:.95rem">Basic sharing • Community support</p>
+        </div>
+        <div style="background:#fff;border:1px solid #eef2ff;border-radius:14px;padding:18px">
+          <h3 style="margin-bottom:8px">Plus</h3>
+          <strong style="font-size:1.4rem;color:#111">200 GB</strong>
+          <p style="color:#6b7280;font-size:.95rem">Password links • Expiring shares</p>
+        </div>
+        <div style="background:#fff;border:1px solid #eef2ff;border-radius:14px;padding:18px">
+          <h3 style="margin-bottom:8px">Pro</h3>
+          <strong style="font-size:1.4rem;color:#111">2 TB</strong>
+          <p style="color:#6b7280;font-size:.95rem">Advanced security • Priority support</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section id="faq" style="padding:56px 0">
+    <div style="max-width:1180px;margin:0 auto;padding:0 20px">
+      <h2 style="font-size:1.9rem;margin-bottom:10px">Frequently asked questions</h2>
+      <div style="display:grid;gap:12px" id="faqList">
+        <div style="background:#fff;border-radius:12px;box-shadow:0 10px 25px rgba(0,0,0,.08);overflow:hidden">
+          <div class="faq-q" style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;cursor:pointer">How secure is PiCloud? <span>+</span></div>
+          <div class="faq-a" style="display:none;padding:0 16px 16px;color:#4b5563">All files are encrypted at rest and in transit. With optional zero-knowledge encryption, only you can access your content.</div>
+        </div>
+        <div style="background:#fff;border-radius:12px;box-shadow:0 10px 25px rgba(0,0,0,.08);overflow:hidden">
+          <div class="faq-q" style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;cursor:pointer">Can I share files with people without an account? <span>+</span></div>
+          <div class="faq-a" style="display:none;padding:0 16px 16px;color:#4b5563">Yes. Create a public or password-protected link and set an expiry date for extra control.</div>
+        </div>
+        <div style="background:#fff;border-radius:12px;box-shadow:0 10px 25px rgba(0,0,0,.08);overflow:hidden">
+          <div class="faq-q" style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;cursor:pointer">Is there a desktop or mobile app? <span>+</span></div>
+          <div class="faq-a" style="display:none;padding:0 16px 16px;color:#4b5563">Android, iOS, Windows, and macOS apps are available. Sync folders and back up photos automatically.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer style="margin-top:40px;background:#fff;border-top:1px solid #eee">
+    <div style="max-width:1180px;margin:0 auto;padding:0 20px;padding:18px 0;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;color:#6b7280">
+      <div>© 2025 PiCloud. All rights reserved.</div>
+      <div style="display:flex;gap:14px">
+        <a href="privacy/" style="text-decoration:none;color:inherit">Privacy</a>
+        <a href="terms/" style="text-decoration:none;color:inherit">Terms</a>
+        <a href="security/" style="text-decoration:none;color:inherit">Security</a>
+        <a href="support/" style="text-decoration:none;color:inherit">Support</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // FAQ accordion
+    document.querySelectorAll('.faq-q').forEach(q=>{
+      q.addEventListener('click',()=>{
+        const a = q.nextElementSibling;
+        const open = a.style.display==='block';
+        document.querySelectorAll('.faq-a').forEach(x=>x.style.display='none');
+        a.style.display = open ? 'none' : 'block';
+      });
+    });
+
+    // ===== Auth redirect for all buttons/links =====
+    document.addEventListener('DOMContentLoaded', function() {
+    const isLoggedIn = {{ request.user.is_authenticated|yesno:"true,false" }};
+    
+    if (!isLoggedIn) {
+      document.querySelectorAll('a, button').forEach(el => {
+        el.addEventListener('click', function(e) {
+          const href = el.getAttribute('href');
+          
+          // Allow safe links
+          const safeLinks = [
+            "privacy/", "terms/", "security/", "support/",
+            "{% url 'login' %}", "{% url 'register' %}", "{% url 'index' %}"
+          ];
+
+          if (href 
+              && !href.startsWith('#') 
+              && !safeLinks.includes(href)) {
+            e.preventDefault();
+            window.location.href = "{% url 'login' %}";
+          }
+        });
+      });
+    }
+  });
+
+
+  </script>
+</body>
+</html>

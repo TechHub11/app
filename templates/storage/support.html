@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PiCloud – Support</title>
+  <style>
+    :root {
+      --bg:#f4f6f8;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --brand:#007bff;
+      --brand-dark:#0056b3;
+      --shadow:0 10px 25px rgba(0,0,0,.08);
+      --radius:18px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+    a{text-decoration:none;color:inherit}
+    img{max-width:100%;display:block;border-radius:12px;}
+    .container{max-width:1150px;margin:0 auto;padding:0 20px}
+
+    header{background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.05);padding:16px 0;position:sticky;top:0;z-index:50;}
+    .nav{display:flex;align-items:center;justify-content:space-between;}
+    .nav-links{display:flex;gap:20px;align-items:center;}
+    .nav-links a{color:#444;font-weight:500;}
+    .cta{background:var(--brand);color:#fff;padding:8px 14px;border-radius:10px;font-weight:600;box-shadow:var(--shadow);}
+    .cta:hover{background:var(--brand-dark);}
+
+    .section{padding:70px 0;}
+    .section h2{text-align:center;font-size:2rem;margin-bottom:14px;}
+    .section p.lead{text-align:center;max-width:720px;margin:0 auto 40px;color:var(--muted);}
+
+    .search-bar{text-align:center;margin-top:30px;}
+    .search-bar input{width:80%;max-width:600px;padding:12px 18px;border-radius:10px;border:1px solid #ddd;font-size:1rem;box-shadow:var(--shadow);}
+
+    .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin-top:30px;}
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:26px;transition:transform .2s;text-align:center;}
+    .card:hover{transform:translateY(-6px);}
+    .card h3{margin-bottom:12px;font-size:1.2rem;color:#111;}
+    .card p{color:var(--muted);}
+
+    .faq{display:grid;gap:16px;margin-top:40px;}
+    .faq-item{background:#fff;border-radius:12px;box-shadow:var(--shadow);overflow:hidden;}
+    .faq-q{padding:16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;}
+    .faq-a{display:none;padding:0 16px 16px;color:#4b5563;}
+
+    .resources{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin-top:30px;}
+    .resource{background:var(--card);padding:26px;border-radius:var(--radius);box-shadow:var(--shadow);text-align:center;}
+    .resource h3{margin-bottom:10px;}
+
+    form{max-width:600px;margin:30px auto;background:#fff;padding:30px;border-radius:var(--radius);box-shadow:var(--shadow);}
+    form label{display:block;margin-bottom:8px;font-weight:600;}
+    form input,form textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;margin-bottom:16px;font-size:1rem;}
+    form button{background:var(--brand);color:#fff;padding:12px 20px;border:none;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;box-shadow:var(--shadow);}
+    form button:hover{background:var(--brand-dark);}
+
+    .callout{background:linear-gradient(135deg,#e9f3ff,#ffffff);padding:50px;border-radius:22px;box-shadow:var(--shadow);text-align:center;margin-top:50px;}
+    .callout h2{margin-bottom:14px;}
+
+    footer{margin-top:70px;background:#fff;border-top:1px solid #eee;}
+    .foot{padding:18px 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;color:#6b7280;}
+    .links{display:flex;gap:14px;}
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="container nav">
+      <div style="display:flex;align-items:center;gap:10px;font-weight:700;color:#007bff">☁️ <span style="font-size:1.1rem;color:#222">PiCloud</span></div>
+      <nav class="nav-links">
+        <a href="{% url 'index' %}">Home</a>
+        <a href="#help">help</a>
+        <a href="#FAQ">FAQ</a>
+        <a href="#Resource">Security</a>
+        <a href="#contact" class="cta">Support</a>
+        {% if user.is_authenticated %}
+        <a href="{% url 'profile' %}">
+            <img class="avatar" src="{{ user.profile.image.url }}" alt="{{ user.username }}" style="width:40px;height:40px;border-radius:50%;"/>
+        </a>  
+    {% endif %} 
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section style="background:linear-gradient(180deg,#e9f3ff,rgba(233,243,255,0));padding:72px 0 36px;text-align:center">
+    <div style="max-width:900px;margin:0 auto;padding:0 20px">
+      <h1 style="font-size:2.4rem;line-height:1.2;margin-bottom:16px;color:#111">💬 Support Center</h1>
+      <p style="color:#4b5563;font-size:1.1rem">Need help with PiCloud? Browse resources, get quick answers, or reach out to our support team.</p>
+    </div>
+    <div class="search-bar">
+      <input type="text" placeholder="🔎 Search for help articles, guides, or FAQs...">
+    </div>
+  </section>
+
+  <!-- Quick Support Categories -->
+  <section id="help" class="section">
+    <div class="container">
+      <h2>How can we help you?</h2>
+      <p class="lead">Choose a category below to get started.</p>
+      <div class="card-grid">
+        <div class="card"><h3>👤 Account</h3><p>Manage login, passwords, and account recovery options.</p></div>
+        <div class="card"><h3>☁️ Storage</h3><p>Learn about file uploads, sync, and managing your space.</p></div>
+        <div class="card"><h3>🔒 Security</h3><p>Set up 2FA, review sessions, and learn best practices.</p></div>
+        <div class="card"><h3>💳 Billing</h3><p>Check subscription plans, invoices, and payment methods.</p></div>
+        <div class="card"><h3>📱 Apps</h3><p>Install PiCloud apps for iOS, Android, Windows, and macOS.</p></div>
+        <div class="card"><h3>🤝 Collaboration</h3><p>Share files securely, manage permissions, and work together.</p></div>
+        <div class="card"><h3>⚡ Troubleshooting</h3><p>Fix common errors and get technical assistance quickly.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section id="FAQ" class="section">
+    <div class="container">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq">
+        <div class="faq-item"><div class="faq-q">How do I reset my password? <span>+</span></div><div class="faq-a">Click on “Forgot password” at login, enter your email, and follow the reset link instructions.</div></div>
+        <div class="faq-item"><div class="faq-q">Can I upgrade my storage anytime? <span>+</span></div><div class="faq-a">Yes, you can upgrade instantly from the billing section in your account dashboard.</div></div>
+        <div class="faq-item"><div class="faq-q">How do I enable two-factor authentication (2FA)? <span>+</span></div><div class="faq-a">Go to Account Settings → Security → Enable 2FA, then scan the QR code using an authenticator app.</div></div>
+        <div class="faq-item"><div class="faq-q">Where can I download PiCloud apps? <span>+</span></div><div class="faq-a">PiCloud is available for Android, iOS, Windows, and macOS. Download links are in the Apps section.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Resources -->
+  <section id="Resource" class="section">
+    <div class="container">
+      <h2>Resources & Community</h2>
+      <p class="lead">Explore guides, join the community, and learn best practices.</p>
+      <div class="resources">
+        <div class="resource"><h3>📘 Documentation</h3><p>Step-by-step setup guides and tutorials for all features.</p></div>
+        <div class="resource"><h3>🎥 Video Tutorials</h3><p>Watch easy video guides on using PiCloud effectively.</p></div>
+        <div class="resource"><h3>🌍 Community Forum</h3><p>Ask questions, share tips, and connect with other users.</p></div>
+        <div class="resource"><h3>📰 Blog & Updates</h3><p>Stay updated with product news, tips, and announcements.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Form -->
+  <section id="contact" class="section">
+    <div class="container">
+      <h2>Contact Support</h2>
+      <p class="lead">Fill out the form below and our team will get back to you.</p>
+      <form method="post" action="{% url 'support' %}">
+      {% csrf_token %}
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" class="form-control" id="name" name="name" placeholder="Your name" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="desc">Message</label>
+          <textarea class="form-control" id="desc" rows="5" name="desc" placeholder="How can we help you?" required></textarea>
+        </div>
+        
+        <button class="btn btn-primary" type="submit">Submit Request</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container foot">
+      <div>© 2025 PiCloud. All rights reserved.</div>
+      <div class="links">
+        <a href="{% url 'privacy' %}">Privacy</a>
+        <a href="{% url 'terms' %}">Terms</a>
+        <a href="{% url 'security' %}">Security</a>
+        <a href="{% url 'support' %}">Support</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // FAQ accordion
+    document.querySelectorAll('.faq-q').forEach(q=>{
+      q.addEventListener('click',()=>{
+        const a = q.nextElementSibling;
+        const open = a.style.display==='block';
+        document.querySelectorAll('.faq-a').forEach(x=>x.style.display='none');
+        a.style.display = open ? 'none' : 'block';
+      });
+    });
+
+    
+  {% if messages %}
+  {% for message in messages %}
+    <div class="toast" id="toast">{{ message }}</div>
+  {% endfor %}
+  <script>
+    let toast = document.getElementById("toast");
+    toast.classList.add("show");
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, 3000); // disappears after 3 seconds
+  </script>
+{% endif %}
+
+
+<style>
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #4CAF50;
+  color: white;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+.toast.show {
+  opacity: 1;
+}
+</style>
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="toast" id="toast">{{ message }}</div>
+  {% endfor %}
+  <script>
+    let toast = document.getElementById("toast");
+    toast.classList.add("show");
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, 3000); // disappears after 3 seconds
+  </script>
+{% endif %}
+
+
+</body>
+</html>

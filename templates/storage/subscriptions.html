@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Subscription Plans – PiCloud</title>
+  <style>
+    .current-plan-badge {
+      background: #007bff;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      margin-left: 10px;
+    }
+    .plan-card {
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    .plan-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.15) !important;
+    }
+    .pro-plan {
+      border: 2px solid #007bff;
+    }
+    .price-amount {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #111;
+      margin: 8px 0;
+    }
+    .price-period {
+      color: #6b7280;
+      font-size: 0.9rem;
+    }
+    .feature-list {
+      margin: 20px 0;
+      list-style: none;
+      padding: 0;
+      text-align: left;
+      display: grid;
+      gap: 8px;
+      color: #4b5563;
+    }
+    .btn-primary {
+      display: inline-block;
+      background: #007bff;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 600;
+      box-shadow: 0 6px 16px rgba(0,123,255,.3);
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary:hover {
+      background: #0056b3;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,123,255,.4);
+    }
+    .btn-secondary {
+      display: inline-block;
+      background: #6c757d;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 600;
+      border: none;
+      cursor: not-allowed;
+    }
+    .btn-success {
+      background: #28a745;
+      box-shadow: 0 6px 16px rgba(40,167,69,.3);
+    }
+    .btn-success:hover {
+      background: #218838;
+      box-shadow: 0 8px 20px rgba(40,167,69,.4);
+    }
+    .payment-options {
+      display: flex;
+      gap: 10px;
+      margin: 15px 0;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .payment-icon {
+      font-size: 1.5rem;
+      margin: 0 5px;
+    }
+  </style>
+</head>
+<body style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:#f4f6f8;color:#1f2937;line-height:1.6;margin:0">
+
+  <!-- Header -->
+  <header style="position:sticky;top:0;z-index:50;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.05)">
+    <div style="max-width:1180px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:10px;font-weight:700;color:#007bff">
+        ☁️ <span style="font-size:1.1rem;color:#222">PiCloud</span>
+      </div>
+      <nav style="display:flex;gap:18px;align-items:center">
+        <a href="{% url 'index' %}" style="color:#444;text-decoration:none">Home</a>
+        <a href="{% url 'profile' %}" style="color:#444;text-decoration:none">Profile</a>
+        <a href="{% url 'subscription_plans' %}" style="color:#007bff;font-weight:600;text-decoration:none">Plans</a>
+        <a href="{% url 'support' %}" style="color:#444;text-decoration:none">Support</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section style="background:linear-gradient(135deg,#e9f3ff 0%,#d6e4ff 50%,#f4f6f8 100%);padding:80px 20px;text-align:center">
+    <div style="max-width:900px;margin:0 auto">
+      <h1 style="font-size:2.6rem;line-height:1.2;margin-bottom:16px;color:#111;font-weight:700">Choose the plan that's right for you</h1>
+      <p style="color:#4b5563;font-size:1.15rem">Start free with 15 GB of storage. Upgrade anytime for more space and advanced features.</p>
+      
+      {% if current_subscription %}
+      <div style="margin-top: 20px; padding: 15px; background: white; border-radius: 10px; display: inline-block; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        <strong>Current Plan: {{ current_subscription.plan.get_name_display }}</strong>
+        <span style="margin-left: 10px; color: #007bff;">{{ current_subscription.plan.storage_gb }} GB Storage</span>
+        {% if current_subscription.plan.price_monthly > 0 %}
+        <span style="margin-left: 10px; color: #28a745;">${{ current_subscription.plan.price_monthly }}/month</span>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- Messages -->
+  {% if messages %}
+  <div style="max-width: 1180px; margin: 20px auto; padding: 0 20px;">
+    {% for message in messages %}
+    <div style="padding: 12px; background: {% if message.tags == 'success' %}#d4edda{% elif message.tags == 'error' %}#f8d7da{% else %}#d1ecf1{% endif %}; 
+                color: {% if message.tags == 'success' %}#155724{% elif message.tags == 'error' %}#721c24{% else %}#0c5460{% endif %}; 
+                border-radius: 8px; margin-bottom: 10px; border: 1px solid {% if message.tags == 'success' %}#c3e6cb{% elif message.tags == 'error' %}#f5c6cb{% else %}#bee5eb{% endif %};">
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Payment Methods Info -->
+  {% if user.is_authenticated %}
+  <div style="max-width: 1180px; margin: 0 auto 30px auto; padding: 0 20px;">
+    <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); text-align: center;">
+      <h3 style="margin: 0 0 10px 0; color: #1f2937;">💳 Multiple Payment Methods Accepted</h3>
+      <div class="payment-options">
+        <span class="payment-icon">💳</span> Credit Card
+        <span class="payment-icon">🏦</span> Debit Card  
+        <span class="payment-icon">📱</span> Google Pay
+        <span class="payment-icon">📲</span> PhonePe
+        <span class="payment-icon">🔗</span> UPI
+        <span class="payment-icon">🏛️</span> Net Banking
+        <span class="payment-icon">🔵</span> Visa
+        <span class="payment-icon">🟠</span> MasterCard
+      </div>
+      <p style="margin: 10px 0 0 0; color: #6b7280; font-size: 0.9rem;">Secure payments powered by Stripe</p>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Plans -->
+  <section style="padding:40px 20px 80px 20px">
+    <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:28px">
+
+      <!-- Free Plan -->
+      <div class="plan-card {% if current_subscription and current_subscription.plan.name == 'free' %}current-plan{% endif %}" 
+           style="background:#fff;border-radius:16px;box-shadow:0 8px 20px rgba(0,0,0,.08);padding:32px;text-align:center;position:relative">
+        {% if current_subscription and current_subscription.plan.name == 'free' %}
+        <div class="current-plan-badge">Current Plan</div>
+        {% endif %}
+        
+        <div style="margin-bottom: 20px;">
+          <h2 style="font-size:1.5rem;margin-bottom:8px;color:#111;">Free</h2>
+          <div class="price-amount">15 GB</div>
+          <div class="price-period">$0/month · Forever free</div>
+        </div>
+
+        <p style="color:#6b7280;font-size:.95rem;margin-bottom:25px;">For individuals getting started</p>
+        
+        <ul class="feature-list">
+          <li>✔️ 15 GB secure storage</li>
+          <li>✔️ Basic file sharing</li>
+          <li>✔️ Community support</li>
+          <li>✔️ Web access</li>
+        </ul>
+
+        {% if user.is_authenticated %}
+          {% if current_subscription and current_subscription.plan.name == 'free' %}
+          <button class="btn-secondary" disabled>Current Plan</button>
+          {% else %}
+          <a href="{% url 'downgrade_subscription' %}" class="btn-primary btn-success">
+            Switch to Free
+          </a>
+          {% endif %}
+        {% else %}
+          <a href="{% url 'register' %}" class="btn-primary">
+            Get Started Free
+          </a>
+        {% endif %}
+      </div>
+
+      <!-- Plus Plan -->
+      <div class="plan-card {% if current_subscription and current_subscription.plan.name == 'plus' %}current-plan{% endif %}" 
+           style="background:#fff;border-radius:16px;box-shadow:0 8px 20px rgba(0,0,0,.08);padding:32px;text-align:center;position:relative">
+        {% if current_subscription and current_subscription.plan.name == 'plus' %}
+        <div class="current-plan-badge">Current Plan</div>
+        {% endif %}
+        
+        <div style="margin-bottom: 20px;">
+          <h2 style="font-size:1.5rem;margin-bottom:8px;color:#111;">Plus</h2>
+          <div class="price-amount">100 GB</div>
+          <div class="price-period">$2.99/month · $29.99/year</div>
+        </div>
+
+        <p style="color:#6b7280;font-size:.95rem;margin-bottom:25px;">For personal use & more storage</p>
+        
+        <ul class="feature-list">
+          <li>✔️ 100 GB secure storage</li>
+          <li>✔️ File version history</li>
+          <li>✔️ Expiring share links</li>
+          <li>✔️ Standard support</li>
+          <li>✔️ Mobile app access</li>
+        </ul>
+
+        {% if user.is_authenticated %}
+          {% if current_subscription and current_subscription.plan.name == 'plus' %}
+          <button class="btn-secondary" disabled>Current Plan</button>
+          {% else %}
+          <a href="{% url 'checkout' 'plus' %}" class="btn-primary">
+            {% if current_subscription %}Upgrade to Plus{% else %}Get Started{% endif %}
+          </a>
+          {% endif %}
+        {% else %}
+          <a href="{% url 'register' %}" class="btn-primary">
+            Get Started
+          </a>
+        {% endif %}
+      </div>
+
+      <!-- Pro Plan -->
+      <div class="plan-card pro-plan {% if current_subscription and current_subscription.plan.name == 'pro' %}current-plan{% endif %}" 
+           style="background:#fff;border-radius:16px;box-shadow:0 12px 30px rgba(0,123,255,.15);padding:36px;text-align:center;position:relative;transform:scale(1.05)">
+        {% if current_subscription and current_subscription.plan.name == 'pro' %}
+        <div class="current-plan-badge">Current Plan</div>
+        {% else %}
+        <div style="background:linear-gradient(135deg,#007bff,#0056b3);color:white;padding:6px 16px;border-radius:20px;font-size:0.8rem;position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-weight:600;">
+          MOST POPULAR
+        </div>
+        {% endif %}
+        
+        <div style="margin-bottom: 20px;">
+          <h2 style="font-size:1.5rem;margin-bottom:8px;color:#111;">Pro</h2>
+          <div class="price-amount">256 GB</div>
+          <div class="price-period">$7.99/month · $79.99/year</div>
+        </div>
+
+        <p style="color:#6b7280;font-size:.95rem;margin-bottom:25px;">For power users & maximum storage</p>
+        
+        <ul class="feature-list">
+          <li>✔️ 256 GB secure storage</li>
+          <li>✔️ Priority sharing controls</li>
+          <li>✔️ Advanced security (2FA, encryption)</li>
+          <li>✔️ Priority support</li>
+          <li>✔️ Offline access</li>
+          <li>✔️ Advanced analytics</li>
+        </ul>
+
+        {% if user.is_authenticated %}
+          {% if current_subscription and current_subscription.plan.name == 'pro' %}
+          <button class="btn-secondary" disabled>Current Plan</button>
+          {% else %}
+          <a href="{% url 'checkout' 'pro' %}" class="btn-primary" style="background:linear-gradient(135deg,#007bff,#0056b3);padding:14px 28px;font-size:1.05rem;">
+            {% if current_subscription %}Go Pro{% else %}Get Started{% endif %}
+          </a>
+          {% endif %}
+        {% else %}
+          <a href="{% url 'register' %}" class="btn-primary" style="background:linear-gradient(135deg,#007bff,#0056b3);padding:14px 28px;font-size:1.05rem;">
+            Go Pro
+          </a>
+        {% endif %}
+      </div>
+
+      <!-- Business Plan -->
+      <div class="plan-card {% if current_subscription and current_subscription.plan.name == 'business' %}current-plan{% endif %}" 
+           style="background:#fff;border-radius:16px;box-shadow:0 8px 20px rgba(0,0,0,.08);padding:32px;text-align:center;position:relative">
+        {% if current_subscription and current_subscription.plan.name == 'business' %}
+        <div class="current-plan-badge">Current Plan</div>
+        {% endif %}
+        
+        <div style="margin-bottom: 20px;">
+          <h2 style="font-size:1.5rem;margin-bottom:8px;color:#111;">Business</h2>
+          <div class="price-amount">512 GB+</div>
+          <div class="price-period">$15.99/month · $159.99/year</div>
+        </div>
+
+        <p style="color:#6b7280;font-size:.95rem;margin-bottom:25px;">For teams & companies</p>
+        
+        <ul class="feature-list">
+          <li>✔️ 512 GB shared storage (expandable)</li>
+          <li>✔️ Admin controls & audit logs</li>
+          <li>✔️ Secure team collaboration</li>
+          <li>✔️ 24/7 premium support</li>
+          <li>✔️ Custom branding</li>
+          <li>✔️ API access</li>
+        </ul>
+
+        {% if user.is_authenticated %}
+          {% if current_subscription and current_subscription.plan.name == 'business' %}
+          <button class="btn-secondary" disabled>Current Plan</button>
+          {% else %}
+          <a href="{% url 'checkout' 'business' %}" class="btn-primary">
+            {% if current_subscription %}Upgrade{% else %}Start Business{% endif %}
+          </a>
+          {% endif %}
+        {% else %}
+          <a href="{% url 'register' %}" class="btn-primary">
+            Contact Sales
+          </a>
+        {% endif %}
+      </div>
+
+    </div>
+
+    <!-- Additional Info -->
+    <div style="max-width: 800px; margin: 60px auto 0 auto; text-align: center;">
+      <div style="background: white; padding: 30px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+        <h3 style="margin-bottom: 15px; color: #1f2937;">💡 Need Help Choosing?</h3>
+        <p style="color: #6b7280; margin-bottom: 20px;">
+          All plans include our core features. Upgrade or downgrade at any time. 
+          Your files are safe during plan changes.
+        </p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: left;">
+          <div>
+            <strong>🔒 Security</strong>
+            <p style="font-size: 0.9rem; color: #6b7280; margin: 5px 0 0 0;">End-to-end encryption on all plans</p>
+          </div>
+          <div>
+            <strong>📱 Access</strong>
+            <p style="font-size: 0.9rem; color: #6b7280; margin: 5px 0 0 0;">Web, mobile, and desktop apps</p>
+          </div>
+          <div>
+            <strong>🔄 Flexibility</strong>
+            <p style="font-size: 0.9rem; color: #6b7280; margin: 5px 0 0 0;">Change plans anytime, no lock-in</p>
+          </div>
+          <div>
+            <strong>💬 Support</strong>
+            <p style="font-size: 0.9rem; color: #6b7280; margin: 5px 0 0 0;">24/7 support on Business plan</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="margin-top:40px;background:#fff;border-top:1px solid #eee">
+    <div style="max-width:1180px;margin:0 auto;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;color:#6b7280">
+      <div>© 2025 PiCloud. All rights reserved.</div>
+      <div style="display:flex;gap:14px">
+        <a href="{% url 'privacy' %}" style="text-decoration:none;color:inherit">Privacy</a>
+        <a href="{% url 'terms' %}" style="text-decoration:none;color:inherit">Terms</a>
+        <a href="{% url 'security' %}" style="text-decoration:none;color:inherit">Security</a>
+        <a href="{% url 'support' %}" style="text-decoration:none;color:inherit">Support</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Add smooth hover effects
+    document.addEventListener('DOMContentLoaded', function() {
+      const planCards = document.querySelectorAll('.plan-card');
+      
+      planCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+          if (!this.classList.contains('pro-plan')) {
+            this.style.transform = 'translateY(-5px)';
+            this.style.boxShadow = '0 12px 30px rgba(0,0,0,0.15)';
+          }
+        });
+        
+        card.addEventListener('mouseleave', function() {
+          if (!this.classList.contains('pro-plan')) {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = '0 8px 20px rgba(0,0,0,.08)';
+          }
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>

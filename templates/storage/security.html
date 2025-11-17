@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PiCloud – Security</title>
+  <style>
+    :root {
+      --bg:#f4f6f8;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --brand:#007bff;
+      --brand-dark:#0056b3;
+      --shadow:0 10px 25px rgba(0,0,0,.08);
+      --radius:18px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+    a{text-decoration:none;color:inherit}
+    img{max-width:100%;display:block;border-radius:12px;}
+    .container{max-width:1150px;margin:0 auto;padding:0 20px}
+
+    header{background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.05);padding:16px 0;position:sticky;top:0;z-index:50;}
+    .nav{display:flex;align-items:center;justify-content:space-between;}
+    .nav-links{display:flex;gap:20px;align-items:center;}
+    .nav-links a{color:#444;font-weight:500;}
+    .cta{background:var(--brand);color:#fff;padding:8px 14px;border-radius:10px;font-weight:600;box-shadow:var(--shadow);}
+    .cta:hover{background:var(--brand-dark);}
+
+    .section{padding:70px 0;}
+    .section h2{text-align:center;font-size:2rem;margin-bottom:14px;}
+    .section p.lead{text-align:center;max-width:720px;margin:0 auto 40px;color:var(--muted);}
+
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;margin-top:40px;}
+    .split img{box-shadow:var(--shadow);border-radius:var(--radius);}
+    @media(max-width:900px){.split{grid-template-columns:1fr;text-align:center;}}
+
+    .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-top:30px;}
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:26px;transition:transform .2s;}
+    .card:hover{transform:translateY(-6px);}
+    .card h3{margin-bottom:12px;font-size:1.2rem;color:#111;}
+    .card p{color:var(--muted);}
+
+    .callout{background:linear-gradient(135deg,#e9f3ff,#ffffff);padding:50px;border-radius:22px;box-shadow:var(--shadow);text-align:center;margin-top:50px;}
+    .callout h2{margin-bottom:14px;}
+
+    footer{margin-top:70px;background:#fff;border-top:1px solid #eee;}
+    .foot{padding:18px 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;color:#6b7280;}
+    .links{display:flex;gap:14px;}
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="container nav">
+      <div style="display:flex;align-items:center;gap:10px;font-weight:700;color:#007bff">☁️ <span style="font-size:1.1rem;color:#222">PiCloud</span></div>
+      <nav class="nav-links">
+        <a href="{% url 'index' %}">Home</a>
+        <a href="#encryption">Encryption</a>
+        <a href="#access">Access</a>
+        <a href="#compliance">Compliance</a>
+        <a href="#infrastructure">Infrastructure</a>
+        <a href="#monitoring">Monitoring</a>
+        <a href="#contact" class="cta">Contact</a>
+        {% if user.is_authenticated %}
+        <a href="{% url 'profile' %}">
+            <img class="avatar" src="{{ user.profile.image.url }}" alt="{{ user.username }}" style="width:40px;height:40px;border-radius:50%;"/>
+        </a>  
+    {% endif %} 
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section style="background:linear-gradient(180deg,#e9f3ff,rgba(233,243,255,0));padding:72px 0 36px;text-align:center">
+    <div style="max-width:900px;margin:0 auto;padding:0 20px">
+      <h1 style="font-size:2.4rem;line-height:1.2;margin-bottom:16px;color:#111">🔒 Security at PiCloud</h1>
+      <p style="color:#4b5563;font-size:1.1rem">Your files deserve the best protection. Learn how PiCloud keeps your data safe, private, and always under your control.</p>
+    </div>
+  </section>
+
+  <!-- Encryption Section -->
+  <section id="encryption" class="section">
+    <div class="container">
+      <h2>Advanced Encryption</h2>
+      <p class="lead">We use the latest encryption standards to ensure your files are secure at all times.</p>
+      <div class="split">
+        <img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=1000&auto=format&fit=crop" alt="Encryption illustration">
+        <div class="card-grid">
+          <div class="card">
+            <h3>🔐 End-to-End</h3>
+            <p>All files are encrypted before leaving your device. Only you hold the decryption keys.</p>
+          </div>
+          <div class="card">
+            <h3>🛡️ AES-256</h3>
+            <p>Industry-standard AES-256 encryption ensures maximum protection of your data.</p>
+          </div>
+          <div class="card">
+            <h3>🔑 Zero-Knowledge</h3>
+            <p>PiCloud has no access to your files or keys — your privacy is guaranteed.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Access Section -->
+  <section id="access" class="section">
+    <div class="container">
+      <h2>Secure Account Access</h2>
+      <p class="lead">Protecting your login and account is our top priority.</p>
+      <div class="split">
+        <div class="card-grid">
+          <div class="card">
+            <h3>👤 Multi-Factor Auth</h3>
+            <p>Add extra security with authenticator apps and hardware tokens.</p>
+          </div>
+          <div class="card">
+            <h3>🌍 Suspicious Login Alerts</h3>
+            <p>Get notified instantly about unusual login attempts from unknown devices.</p>
+          </div>
+          <div class="card">
+            <h3>📱 Device Management</h3>
+            <p>Review and revoke active sessions from your dashboard anytime.</p>
+          </div>
+        </div>
+        <img src="https://www.shutterstock.com/shutterstock/photos/2182575481/display_1500/stock-photo--fa-increases-the-security-of-your-account-two-factor-authentication-digital-screen-displaying-a-2182575481.jpg" alt="Access security">
+      </div>
+    </div>
+  </section>
+
+  <!-- Compliance Section -->
+  <section id="compliance" class="section">
+    <div class="container">
+      <h2>Compliance & Standards</h2>
+      <p class="lead">We follow global compliance frameworks to give you peace of mind.</p>
+      <div class="split">
+        <img src="https://images.unsplash.com/photo-1551836022-4c4c79ecde51?q=80&w=1000&auto=format&fit=crop" alt="Compliance illustration">
+        <div class="card-grid">
+          <div class="card">
+            <h3>🌐 GDPR</h3>
+            <p>Fully compliant with EU’s General Data Protection Regulation (GDPR).</p>
+          </div>
+          <div class="card">
+            <h3>🏢 SOC 2</h3>
+            <p>Our systems follow strict SOC 2 Type II standards for data security and integrity.</p>
+          </div>
+          <div class="card">
+            <h3>☁️ Regional Storage</h3>
+            <p>Choose where your files are stored — US, EU, or APAC regions.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Infrastructure Section -->
+  <section id="infrastructure" class="section">
+    <div class="container">
+      <h2>Reliable Infrastructure</h2>
+      <p class="lead">Our servers and systems are built with resilience and scalability in mind.</p>
+      <div class="card-grid">
+        <div class="card">
+          <h3>⚡ Global Data Centers</h3>
+          <p>PiCloud runs on a distributed global infrastructure for high availability and performance.</p>
+        </div>
+        <div class="card">
+          <h3>🧩 Redundancy</h3>
+          <p>Automatic backups and failover systems keep your files safe, even during outages.</p>
+        </div>
+        <div class="card">
+          <h3>🚀 Scalability</h3>
+          <p>Our cloud grows with you — from personal use to enterprise-level storage needs.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Monitoring Section -->
+  <section id="monitoring" class="section">
+    <div class="container">
+      <h2>Continuous Monitoring</h2>
+      <p class="lead">We actively monitor our systems to detect and prevent threats in real time.</p>
+      <div class="split">
+        <div class="card-grid">
+          <div class="card">
+            <h3>🛰️ 24/7 Monitoring</h3>
+            <p>Our systems are monitored round-the-clock by automated tools and experts.</p>
+          </div>
+          <div class="card">
+            <h3>⚠️ Threat Detection</h3>
+            <p>Machine learning algorithms detect unusual patterns to stop attacks early.</p>
+          </div>
+          <div class="card">
+            <h3>🔄 Regular Audits</h3>
+            <p>Frequent internal and external audits keep our security practices strong.</p>
+          </div>
+        </div>
+        <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1000&auto=format&fit=crop" alt="Monitoring systems">
+      </div>
+    </div>
+  </section>
+
+  <!-- Callout -->
+  <section id="contact" class="section">
+    <div class="container">
+      <div class="callout">
+        <h2>Need More Security Info?</h2>
+        <p>Contact our security team at <a href="mailto:security@picloud.com" style="color:var(--brand);font-weight:600;">security@picloud.com</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container foot">
+      <div>© 2025 PiCloud. All rights reserved.</div>
+      <div class="links">
+        <a href="{% url 'index' %}">Privacy</a>
+        <a href="{% url 'terms' %}">Terms</a>
+        <a href="{% url 'security' %}">Security</a>
+        <a href="{% url 'support' %}">Support</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

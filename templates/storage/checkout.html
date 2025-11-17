@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - PiCloud</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4bb543;
+            --error: #e63946;
+            --gray: #6c757d;
+            --gray-light: #e9ecef;
+            --border-radius: 12px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        
+        
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            color: var(--gray);
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            transition: var(--transition);
+        }
+        
+        .card:hover {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+        }
+        
+        .plan-card {
+            border-left: 4px solid var(--primary);
+        }
+        
+        .plan-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .plan-name {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .plan-price {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        .plan-price span {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--gray);
+        }
+        
+        .plan-features {
+            list-style: none;
+            margin: 20px 0;
+        }
+        
+        .plan-features li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .plan-features li:before {
+            content: "✓";
+            color: var(--success);
+            font-weight: bold;
+            margin-right: 10px;
+            background: rgba(75, 181, 67, 0.1);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .payment-section {
+            margin-top: 30px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title:before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            background: var(--primary);
+            border-radius: 50%;
+        }
+        
+        .payment-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .payment-method {
+            background: var(--light);
+            padding: 18px 20px;
+            border-radius: var(--border-radius);
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .payment-method:hover {
+            background: white;
+            border-color: var(--gray-light);
+        }
+        
+        .payment-method.selected {
+            border-color: var(--primary);
+            background: rgba(67, 97, 238, 0.05);
+        }
+        
+        .payment-method input {
+            margin: 0;
+        }
+        
+        .payment-method label {
+            cursor: pointer;
+            flex-grow: 1;
+            font-weight: 500;
+        }
+        
+        .payment-icon {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .payment-details {
+            margin-left: auto;
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        .btn {
+            background: var(--primary);
+            color: white;
+            padding: 14px 28px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: var(--transition);
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-icon {
+            font-weight: bold;
+        }
+        
+        .action-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+        }
+        
+        .action-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+        
+        .action-link:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+        
+        .action-link:before {
+            content: "←";
+        }
+        
+        .action-link.add:before {
+            content: "+";
+        }
+        
+        .message {
+            padding: 16px 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 25px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .message.success {
+            background: rgba(75, 181, 67, 0.1);
+            color: var(--success);
+            border-left: 4px solid var(--success);
+        }
+        
+        .message.error {
+            background: rgba(230, 57, 70, 0.1);
+            color: var(--error);
+            border-left: 4px solid var(--error);
+        }
+        
+        .message-icon {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                margin: 20px auto;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .plan-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .action-links {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">☁️</div>
+                PiCloud
+            </div>
+            <h1>Complete Your Purchase</h1>
+            <p class="subtitle">Review your plan and select payment method</p>
+        </div>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {% if message.tags == 'success' %}success{% else %}error{% endif %}">
+                    <span class="message-icon">{% if message.tags == 'success' %}✓{% else %}!{% endif %}</span>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="card plan-card">
+            <div class="plan-header">
+                <div class="plan-name">{{ plan.get_name_display }} Plan</div>
+                <div class="plan-price">${{ plan.price_monthly }}<span>/month</span></div>
+            </div>
+            
+            <p><strong>Storage:</strong> {{ plan.storage_gb }} GB</p>
+            
+            <p class="section-title">Plan Features</p>
+            <ul class="plan-features">
+                {% for feature in plan.features %}
+                    <li>{{ feature }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="card payment-section">
+                <p class="section-title">Payment Method</p>
+                
+                {% if payment_methods %}
+                    <div class="payment-methods">
+                        {% for method in payment_methods %}
+                            <div class="payment-method" onclick="selectPaymentMethod(this)">
+                                <input type="radio" name="payment_method" value="{{ method.id }}" id="method_{{ method.id }}" required>
+                                <div class="payment-icon">
+                                    {% if method.payment_type == 'CC' %}💳{% elif method.payment_type == 'PP' %}P{% else %}G{% endif %}
+                                </div>
+                                <label for="method_{{ method.id }}">
+                                    <strong>{{ method.get_payment_type_display }}</strong>
+                                </label>
+                                <div class="payment-details">
+                                    {{ method.provider }} 
+                                    {% if method.last_four %}•••• {{ method.last_four }}{% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>No payment methods found. <a href="{% url 'add_payment_method' %}" class="action-link add">Add a payment method</a></p>
+                {% endif %}
+
+                {% if payment_methods %}
+                    <button type="submit" class="btn">
+                        <span class="btn-icon">✓</span>
+                        Complete Payment
+                    </button>
+                {% endif %}
+            </div>
+        </form>
+
+        <div class="action-links">
+            <a href="{% url 'add_payment_method' %}" class="action-link add">Add New Payment Method</a>
+            <a href="{% url 'subscription_plans' %}" class="action-link">Back to Plans</a>
+        </div>
+    </div>
+
+    <script>
+        function selectPaymentMethod(element) {
+            // Remove selected class from all payment methods
+            document.querySelectorAll('.payment-method').forEach(method => {
+                method.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked payment method
+            element.classList.add('selected');
+            
+            // Check the radio input
+            const radioInput = element.querySelector('input[type="radio"]');
+            radioInput.checked = true;
+        }
+        
+        // Initialize by selecting the first payment method if available
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstPaymentMethod = document.querySelector('.payment-method');
+            if (firstPaymentMethod) {
+                selectPaymentMethod(firstPaymentMethod);
+            }
+        });
+    </script>
+</body>
+</html>

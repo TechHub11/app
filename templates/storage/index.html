@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PiCloud Drive</title>
+  <style>
+    /* =====================
+       THEME & RESETS
+    ====================== */
+    :root{
+      --bg:#f4f6f8;
+      --card:#ffffff;
+      --muted:#6b7280; /* gray-500 */
+      --text:#1f2937;  /* gray-800 */
+      --brand:#007bff;
+      --brand-600:#0056b3;
+      --ring: rgba(0,123,255,.25);
+      --shadow: 0 10px 25px rgba(0,0,0,.08);
+      --radius: 12px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif;background:var(--bg);color:var(--text);display:flex}
+    a{color:inherit;text-decoration:none}
+    button{font:inherit}
+
+    /* =====================
+       LAYOUT
+    ====================== */
+    .app{display:flex;min-height:100%;width:100%}
+
+    /* Sidebar */
+    .sidebar{width:260px;background:linear-gradient(180deg,var(--brand),var(--brand-600));color:#fff;padding:16px;display:flex;flex-direction:column;gap:16px}
+    .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,.12)}
+    .newBtn{background:#fff;color:var(--brand-600);border:none;padding:10px 14px;border-radius:10px;font-weight:600;cursor:pointer;box-shadow:var(--shadow);display:flex;align-items:center;gap:8px}
+    .newBtn:hover{transform:translateY(-1px)}
+
+    .nav{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+    .nav a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;opacity:.95}
+    .nav a:hover,.nav a.active{background:rgba(255,255,255,.14)}
+
+    .storageCard{margin-top:auto;background:rgba(255,255,255,.1);padding:12px;border-radius:12px}
+    .storageBar{width:100%;height:8px;background:rgba(255,255,255,.25);border-radius:999px;overflow:hidden;margin-top:6px}
+    .storageBar>span{display:block;height:100%;background:#fff;width:{{ storage_used_percent }}%}
+
+    /* Main */
+    .main{flex:1;display:flex;flex-direction:column;min-width:0}
+
+    /* Topbar */
+    .topbar{background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.05);display:flex;align-items:center;gap:14px;justify-content:space-between;padding:10px 18px}
+    .leftGroup{display:flex;align-items:center;gap:10px}
+    .hamburger{display:none}
+
+    .search{display:flex;align-items:center;gap:10px;background:#f1f3f4;border-radius:999px;padding:8px 12px;min-width:280px}
+    .search input{border:none;background:transparent;outline:none;width:280px}
+
+    .actions{display:flex;align-items:center;gap:10px}
+    .iconBtn{border:none;background:#f1f3f4;border-radius:10px;padding:8px 10px;cursor:pointer}
+    .primary{background:var(--brand);color:#fff}
+
+    .userBadge{display:flex;align-items:center;gap:10px}
+    .avatar{width:36px;height:36px;border-radius:50%;object-fit:cover}
+
+    /* Breadcrumb + toolbar */
+    .toolbar{display:flex;align-items:center;justify-content:space-between;padding:12px 18px}
+    .crumbs{display:flex;align-items:center;gap:8px;color:var(--muted)}
+    .crumbs span{cursor:pointer}
+    .crumbs span:hover{color:var(--brand)}
+    .viewToggles{display:flex;align-items:center;gap:8px}
+    .select{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:8px 10px}
+
+    /* Content area */
+    .content{flex:1;padding:0 18px 18px;display:grid;grid-template-columns:1fr 320px;gap:18px;min-height:0}
+
+    /* Files panel */
+    .filesPanel{background:transparent;border-radius:var(--radius);display:flex;flex-direction:column;gap:12px;min-width:0}
+
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+    .card{background:var(--card);border-radius:12px;box-shadow:var(--shadow);padding:14px;display:flex;flex-direction:column;gap:8px;cursor:pointer;transition:transform .15s ease, box-shadow .2s ease}
+    .card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(0,0,0,.12)}
+    .thumb{height:110px;border-radius:10px;background:#eef2ff;display:flex;align-items:center;justify-content:center;font-size:34px}
+    .meta{display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--muted)}
+    .name{font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+    /* List view */
+    .list{width:100%;background:var(--card);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
+    .row{display:grid;grid-template-columns:34px 1.6fr 1fr 1fr 90px;gap:10px;align-items:center;padding:12px 14px;border-top:1px solid #f0f0f0}
+    .row:first-child{border-top:none;background:#f9fafb;font-weight:600;color:#374151}
+    .row:hover{background:#f8fafc}
+    .cell.ellipsis{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .chk{display:flex;justify-content:center}
+
+    /* Info panel */
+    .infoPanel{background:var(--card);border-radius:12px;box-shadow:var(--shadow);padding:14px;display:flex;flex-direction:column;gap:12px;min-height:0}
+    .infoHeader{display:flex;align-items:center;justify-content:space-between}
+    .pill{display:inline-flex;align-items:center;gap:6px;background:#eef2ff;color:#3b82f6;border-radius:999px;padding:6px 10px;font-size:12px}
+    .activity{display:flex;flex-direction:column;gap:10px;max-height:430px;overflow:auto}
+    .activity .item{display:flex;gap:10px}
+    .activity .dot{width:8px;height:8px;border-radius:50%;background:var(--brand);margin-top:6px}
+
+    /* Context menu */
+    .menu{position:fixed;inset:auto auto 0 0;opacity:0;pointer-events:none;transform:scale(.95);transform-origin:top left;transition:opacity .15s ease, transform .15s ease;z-index:20;background:#fff;border:1px solid #eee;border-radius:10px;box-shadow:var(--shadow);min-width:180px;max-height: 250px;overflow-y: auto;}
+    .menu.open{opacity:1;pointer-events:auto;transform:scale(1)}
+    .menu ul{list-style:none}
+    .menu li{padding:10px 12px;cursor:pointer}
+    .menu li:hover{background:#f7f8fa}
+
+    /* Hidden file input */
+    #fileInput{position:absolute;left:-9999px}
+
+    /* Upload Progress Bar */
+    .upload-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: #e5e7eb;
+        z-index: 1000;
+        display: none;
+    }
+    
+    .upload-progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #007bff, #0056b3);
+        width: 0%;
+        transition: width 0.3s ease;
+    }
+    
+    .upload-status {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        background: white;
+        padding: 10px 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 1001;
+        display: none;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .loading-spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #f3f3f3;
+        border-top: 2px solid #007bff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px){
+      .content{grid-template-columns:1fr}
+      .infoPanel{display:none}
+    }
+    @media (max-width: 860px){
+      .sidebar{position:fixed;left:-270px;top:0;bottom:0;z-index:30;transition:left .25s ease}
+      .sidebar.open{left:0}
+      .hamburger{display:inline-flex}
+    }
+  </style>
+</head>
+<body>
+  <!-- Upload Progress Bar -->
+  <div class="upload-progress" id="uploadProgress">
+    <div class="upload-progress-bar" id="uploadProgressBar"></div>
+  </div>
+  
+  <div class="upload-status" id="uploadStatus">
+    <div class="loading-spinner"></div>
+    <span>Uploading files...</span>
+  </div>
+
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <a href="{% url 'dashboard' %}" style="text-decoration:none;color:inherit">
+        <div class="logo">☁️ PiCloud</div>
+      </a>
+      <button class="newBtn" id="newBtn">＋ New</button>
+      <nav class="nav">
+        <a href="{% url 'index' %}" class="active">📂 My Drive</a>
+        <a href="#">🤝 Shared with me</a>
+        <a href="{% url 'recent_files' %}">🕒 Recent</a>
+        <a href="{% url 'starred_files' %}">⭐ Starred</a>
+        <a href="{% url 'profile' %}">⚙️ Settings</a>
+      </nav>
+      <div class="storageCard">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <strong>Storage</strong>
+          <span>{{ storage_used_percent }}% used</span>
+        </div>
+        <div class="storageBar"><span></span></div>
+        <small>{{ storage_used_gb }} GB of {{ storage_limit_gb }} GB</small>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <!-- Topbar -->
+      <div class="topbar">
+        <div class="leftGroup">
+          <button class="iconBtn hamburger" id="hamburger">☰</button>
+          <div class="search">
+            🔍 <input id="search" type="search" placeholder="Search in PiCloud..." />
+          </div>
+        </div>
+        <div class="actions">
+          <button class="iconBtn" id="gridBtn" title="Grid view">▦</button>
+          <button class="iconBtn" id="listBtn" title="List view">≣</button>
+          <button class="iconBtn primary" id="uploadBtn">⬆ Upload</button>
+          <form action="{% url 'logout' %}?next={% url 'dashboard' %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" style="background:#007bff;color:#fff;border:none;border-radius:10px;padding:10px 16px;cursor:pointer;box-shadow:0 10px 25px rgba(0,0,0,.08);font-weight:600;">
+              Logout
+            </button>
+          </form>
+          <input id="fileInput" type="file" multiple />
+          <div class="userBadge">
+            {% if user.is_authenticated %}
+              <span class="pill">● Online</span>
+              <a href="{% url 'profile' %}">
+                <img class="avatar" src="{{ user.profile.image.url }}" alt="{{ user.username }}" style="width:36px;height:36px;border-radius:50%;object-fit:cover"/>
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <div class="crumbs" id="breadcrumbs">
+          <span data-path="/">My Drive</span>
+          {% if current_folder %}
+            <span>›</span>
+            <span data-path="/{{ current_folder.id }}">{{ current_folder.name }}</span>
+          {% endif %}
+        </div>
+        <div class="viewToggles">
+          <select class="select" id="sortSelect">
+            <option value="name">Sort by: Name</option>
+            <option value="type">Sort by: Type</option>
+            <option value="size">Sort by: Size</option>
+            <option value="modified">Sort by: Modified</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Content split: files + info -->
+      <section class="content">
+        <!-- Files -->
+        <div class="filesPanel">
+          <!-- Grid view container -->
+          <div class="grid" id="gridView"></div>
+
+          <!-- List view container -->
+          <div class="list" id="listView" style="display:none">
+            <div class="row">
+              <div></div>
+              <div>Name</div>
+              <div>Type</div>
+              <div>Modified</div>
+              <div>Size</div>
+            </div>
+            <div id="listRows"></div>
+          </div>
+        </div>
+
+        <!-- Info / Activity -->
+        <aside class="infoPanel">
+          <div class="infoHeader">
+            <strong>Details & Activity</strong>
+            <span class="pill">i</span>
+          </div>
+          <div>
+            <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">
+              <div class="thumb" style="width:64px;height:64px">📄</div>
+              <div>
+                <div style="font-weight:600">Selected file</div>
+                <small class="muted">No file selected</small>
+              </div>
+            </div>
+          </div>
+          <div>
+            <strong style="display:block;margin-bottom:6px">Activity</strong>
+            <div class="activity" id="activity">
+              {% for activity in activities %}
+              <div class="item">
+                <span class="dot"></span>
+                <div>{{ activity.get_action_display }} <b>{{ activity.item_name }}</b> • {{ activity.timestamp|timesince }} ago</div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </aside>
+      </section>
+    </main>
+  </div>
+
+  <!-- Context Menu -->
+  <div class="menu" id="contextMenu">
+    <ul>
+      <li id="openItem">Open</li>
+      <li id="renameItem">Rename</li>
+      <li id="downloadItem">Download</li>
+      <li id="toggleStarItem">Toggle Star</li>
+      <li id="shareItem">Get share link</li>
+      <li id="deleteItem" style="color:#dc2626">Delete</li>
+    </ul>
+  </div>
+
+  <script>
+  // ===== Mock data from Django =====
+  let files = [
+    {% for f in items %}
+    {
+      id: {{ f.id }},
+      name: "{{ f.name|escapejs }}",
+      type: "{{ f.type }}",   // "folder" or "file"
+      size: "{{ f.size }}",
+      modified: "{{ f.modified }}",
+      icon: "{{ f.icon }}"
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ];
+
+  // ===== Elements =====
+  const grid = document.getElementById('gridView');
+  const list = document.getElementById('listView');
+  const listRows = document.getElementById('listRows');
+  const gridBtn = document.getElementById('gridBtn');
+  const listBtn = document.getElementById('listBtn');
+  const sortSelect = document.getElementById('sortSelect');
+  const uploadBtn = document.getElementById('uploadBtn');
+  const fileInput = document.getElementById('fileInput');
+  const newBtn = document.getElementById('newBtn');
+  const contextMenu = document.getElementById('contextMenu');
+  const sidebar = document.getElementById('sidebar');
+  const hamburger = document.getElementById('hamburger');
+  const searchInput = document.getElementById('search');
+  const uploadProgress = document.getElementById('uploadProgress');
+  const uploadProgressBar = document.getElementById('uploadProgressBar');
+  const uploadStatus = document.getElementById('uploadStatus');
+
+  let currentView = 'grid';
+  let selectedId = null;
+  let selectedType = null;
+
+  // ===== Track current folder =====
+  let currentFolderId = null;
+
+  // ===== Function to reload page =====
+  function reloadPage() {
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
+  }
+
+  // ===== Show upload progress =====
+  function showUploadProgress() {
+    uploadProgress.style.display = 'block';
+    uploadStatus.style.display = 'flex';
+    uploadProgressBar.style.width = '0%';
+    
+    // Simulate progress animation
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += Math.random() * 10;
+      if (progress >= 90) {
+        clearInterval(interval);
+      }
+      uploadProgressBar.style.width = progress + '%';
+    }, 200);
+    
+    return interval;
+  }
+
+  // ===== Hide upload progress =====
+  function hideUploadProgress() {
+    uploadProgressBar.style.width = '100%';
+    setTimeout(() => {
+      uploadProgress.style.display = 'none';
+      uploadStatus.style.display = 'none';
+    }, 500);
+  }
+
+  // ===== Render function =====
+  function render() {
+    // Sort files
+    const sortBy = sortSelect.value;
+    const sorted = [...files].sort((a, b) => {
+      if (sortBy === 'name') return a.name.localeCompare(b.name);
+      if (sortBy === 'type') return a.type.localeCompare(b.type);
+      if (sortBy === 'size') return (a.size==='-'?0:parseFloat(a.size)) - (b.size==='-'?0:parseFloat(b.size));
+      if (sortBy === 'modified') return new Date(b.modified) - new Date(a.modified);
+      return 0;
+    });
+
+    // Grid view
+    grid.innerHTML = '';
+    sorted.forEach(f => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.dataset.id = f.id;
+      card.dataset.type = f.type;
+      card.innerHTML = `
+        <div class="thumb">${f.icon}</div>
+        <div class="name" title="${f.name}">${f.name}</div>
+        <div class="meta"><span>${f.type}</span><span>${f.size}</span></div>
+      `;
+
+      // Single-click select
+      card.addEventListener('click', () => select(f.id, f.type));
+
+      // Double-click to open folder
+      card.addEventListener('dblclick', () => openItem(f.id, f.type));
+
+      // Right-click context menu
+      card.addEventListener('contextmenu', onContext);
+      grid.appendChild(card);
+    });
+
+    // List view
+    listRows.innerHTML = '';
+    sorted.forEach(f => {
+      const row = document.createElement('div');
+      row.className = 'row';
+      row.dataset.id = f.id;
+      row.dataset.type = f.type;
+      row.innerHTML = `
+        <div class="chk"><input type="checkbox"/></div>
+        <div class="cell ellipsis">${f.icon} ${f.name}</div>
+        <div class="cell">${f.type}</div>
+        <div class="cell">${f.modified}</div>
+        <div class="cell">${f.size}</div>
+      `;
+
+      row.addEventListener('click', () => select(f.id, f.type));
+      row.addEventListener('dblclick', () => openItem(f.id, f.type));
+      row.addEventListener('contextmenu', onContext);
+      listRows.appendChild(row);
+    });
+
+    // Show correct view
+    grid.style.display = currentView === 'grid' ? 'grid' : 'none';
+    list.style.display = currentView === 'list' ? 'block' : 'none';
+  }
+
+  // ===== Select a file/folder =====
+  function select(id, type) {
+    selectedId = id;
+    selectedType = type;
+  }
+
+  // ===== Open file/folder =====
+  function openItem(id, type) {
+    if (type === 'folder') {
+      currentFolderId = id;
+      // Fetch folder contents from backend
+      fetch(`/folder/${id}/contents/`)
+        .then(res => res.json())
+        .then(data => {
+          files = data.items;
+          render();
+        })
+        .catch(err => console.error(err));
+    } else {
+      // Download file
+      window.open(`/download/${id}/`, '_blank');
+    }
+  }
+
+  // ===== Event listeners =====
+  gridBtn.onclick = () => { currentView = 'grid'; render(); };
+  listBtn.onclick = () => { currentView = 'list'; render(); };
+  sortSelect.onchange = render;
+
+  // Upload with progress
+  uploadBtn.onclick = () => fileInput.click();
+  fileInput.onchange = (e) => {
+    if (!e.target.files.length) return;
+    
+    const progressInterval = showUploadProgress();
+    const formData = new FormData();
+    [...e.target.files].forEach(file => {
+      formData.append('files', file);
+    });
+    formData.append('folder_id', currentFolderId || '');
+
+    fetch('/upload/', {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}'
+      },
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      clearInterval(progressInterval);
+      hideUploadProgress();
+      
+      if (data.files) {
+        // Show success and reload
+        uploadStatus.innerHTML = '<span style="color:#28a745">✓ Upload complete!</span>';
+        setTimeout(() => {
+          reloadPage();
+        }, 1000);
+      } else if (data.error) {
+        // Show error
+        uploadStatus.innerHTML = `<span style="color:#dc2626">✗ ${data.error}</span>`;
+        setTimeout(() => {
+          uploadStatus.style.display = 'none';
+        }, 3000);
+      }
+    })
+    .catch(err => {
+      clearInterval(progressInterval);
+      hideUploadProgress();
+      uploadStatus.innerHTML = `<span style="color:#dc2626">✗ Upload failed!</span>`;
+      setTimeout(() => {
+        uploadStatus.style.display = 'none';
+      }, 3000);
+      console.error(err);
+    });
+
+    e.target.value = '';
+  };
+
+  // New folder
+  newBtn.onclick = () => {
+    const name = prompt('Folder name');
+    if (!name) return;
+
+    fetch('/create-folder/', {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}',
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: 'name=' + encodeURIComponent(name) + '&parent_id=' + (currentFolderId || '')
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.error) {
+        alert(data.error);
+      } else {
+        // Show success and reload
+        alert('Folder created successfully!');
+        reloadPage();
+      }
+    })
+    .catch(err => console.error(err));
+  };
+
+  // ===== Search, Context Menu, Rename, Download, Star, Share, Delete =====
+  
+  // Search
+  let searchTimeout;
+  searchInput.addEventListener('input', (e) => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      const query = e.target.value.trim();
+      if (query) {
+        fetch(`/search/?q=${encodeURIComponent(query)}`)
+          .then(res => res.json())
+          .then(data => {
+            files = data.items;
+            render();
+          });
+      } else {
+        // Reload current view
+        reloadPage();
+      }
+    }, 500);
+  });
+
+  // Context menu
+  function onContext(e) {
+    e.preventDefault();
+    const id = Number(e.currentTarget.dataset.id);
+    const type = e.currentTarget.dataset.type;
+    selectedId = id;
+    selectedType = type;
+
+    document.getElementById('downloadItem').style.display = type === 'file' ? 'block' : 'none';
+    document.getElementById('toggleStarItem').style.display = type === 'file' ? 'block' : 'none';
+
+    contextMenu.style.left = e.pageX + 'px';
+    contextMenu.style.top = e.pageY + 'px';
+    contextMenu.classList.add('open');
+  }
+
+  document.addEventListener('click', () => contextMenu.classList.remove('open'));
+
+  // Context menu actions with reload
+  document.getElementById('openItem').onclick = () => selectedId && openItem(selectedId, selectedType);
+  
+  document.getElementById('renameItem').onclick = () => {
+    if (!selectedId) return;
+    const f = files.find(x => x.id === selectedId);
+    const newName = prompt('Rename to:', f.name);
+    if (newName) {
+      fetch(`/rename/${selectedType}/${selectedId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'name=' + encodeURIComponent(newName)
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) {
+          alert(data.error);
+        } else {
+          alert('Renamed successfully!');
+          reloadPage();
+        }
+      });
+    }
+  };
+  
+  document.getElementById('downloadItem').onclick = () => {
+    if (!selectedId) return;
+    window.open(`/download/${selectedId}/`, '_blank');
+  };
+  
+  document.getElementById('toggleStarItem').onclick = () => {
+    if (!selectedId || selectedType !== 'file') return;
+    fetch(`/toggle-star/${selectedId}/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}'
+      }
+    })
+    .then(res => res.json())
+    .then(data => {
+      alert(data.is_starred ? 'File starred!' : 'File unstarred!');
+      reloadPage();
+    });
+  };
+  
+  document.getElementById('shareItem').onclick = () => {
+    if (!selectedId) return;
+    const link = location.origin + '/share/' + selectedId;
+    navigator.clipboard.writeText(link).then(() => alert('Share link copied!\n' + link));
+  };
+  
+  document.getElementById('deleteItem').onclick = () => {
+    if (!selectedId) return;
+    if (confirm('Are you sure you want to delete this item?')) {
+      fetch(`/delete/${selectedType}/${selectedId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}'
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert('Item deleted successfully!');
+          reloadPage();
+        }
+      });
+    }
+  };
+
+  // Mobile sidebar toggle
+  hamburger.onclick = () => sidebar.classList.toggle('open');
+
+  // Initial render
+  render();
+</script>
+
+</body>
+</html>

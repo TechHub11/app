@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PiCloud – Terms & Conditions</title>
+  <style>
+    :root {
+      --bg:#f4f6f8;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --brand:#007bff;
+      --brand-dark:#0056b3;
+      --shadow:0 10px 25px rgba(0,0,0,.08);
+      --radius:18px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+    a{text-decoration:none;color:inherit}
+    img{max-width:100%;display:block;border-radius:12px;}
+    .container{max-width:1150px;margin:0 auto;padding:0 20px}
+
+    header{background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.05);padding:16px 0;position:sticky;top:0;z-index:50;}
+    .nav{display:flex;align-items:center;justify-content:space-between;}
+    .nav-links{display:flex;gap:20px;align-items:center;}
+    .nav-links a{color:#444;font-weight:500;}
+    .cta{background:var(--brand);color:#fff;padding:8px 14px;border-radius:10px;font-weight:600;box-shadow:var(--shadow);}
+    .cta:hover{background:var(--brand-dark);}
+
+    .section{padding:70px 0;}
+    .section h2{text-align:center;font-size:2rem;margin-bottom:14px;}
+    .section p.lead{text-align:center;max-width:720px;margin:0 auto 40px;color:var(--muted);}
+
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;margin-top:40px;}
+    .split img{box-shadow:var(--shadow);border-radius:var(--radius);}
+    @media(max-width:900px){.split{grid-template-columns:1fr;text-align:center;}}
+
+    .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-top:30px;}
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:26px;transition:transform .2s;}
+    .card:hover{transform:translateY(-6px);}
+    .card h3{margin-bottom:12px;font-size:1.2rem;color:#111;}
+    .card p{color:var(--muted);}
+
+    .callout{background:linear-gradient(135deg,#e9f3ff,#ffffff);padding:50px;border-radius:22px;box-shadow:var(--shadow);text-align:center;margin-top:50px;}
+    .callout h2{margin-bottom:14px;}
+
+    footer{margin-top:70px;background:#fff;border-top:1px solid #eee;}
+    .foot{padding:18px 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;color:#6b7280;}
+    .links{display:flex;gap:14px;}
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="container nav">
+      <div style="display:flex;align-items:center;gap:10px;font-weight:700;color:#007bff">☁️ <span style="font-size:1.1rem;color:#222">PiCloud</span></div>
+      <nav class="nav-links">
+        <a href="{% url 'index' %}">Home</a>
+        <a href="#usage">Usage</a>
+        <a href="#restrictions">Restrictions</a>
+        <a href="#liability">Liability</a>
+        <a href="#contact" class="cta">Contact</a>
+        {% if user.is_authenticated %}
+        <a href="{% url 'profile' %}">
+            <img class="avatar" src="{{ user.profile.image.url }}" alt="{{ user.username }}" style="width:40px;height:40px;border-radius:50%;"/>
+        </a>  
+    {% endif %} 
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section style="background:linear-gradient(180deg,#e9f3ff,rgba(233,243,255,0));padding:72px 0 36px;text-align:center">
+    <div style="max-width:900px;margin:0 auto;padding:0 20px">
+      <h1 style="font-size:2.4rem;line-height:1.2;margin-bottom:16px;color:#111">📜 Terms & Conditions</h1>
+      <p style="color:#4b5563;font-size:1.1rem">By accessing and using PiCloud, you agree to the following terms. Please read them carefully.</p>
+    </div>
+  </section>
+
+  <!-- Usage Section -->
+  <section id="usage" class="section">
+    <div class="container">
+      <h2>Acceptable Usage</h2>
+      <div class="split">
+        <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1000&auto=format&fit=crop" alt="Usage illustration">
+        <div class="card-grid">
+          <div class="card">
+            <h3>✅ Fair Use</h3>
+            <p>Users agree to use PiCloud for lawful purposes and within the limits of fair usage.</p>
+          </div>
+          <div class="card">
+            <h3>🔐 Account Responsibility</h3>
+            <p>You are responsible for maintaining the confidentiality of your account and password.</p>
+          </div>
+          <div class="card">
+            <h3>📁 Content Ownership</h3>
+            <p>You retain ownership of your files. PiCloud only provides secure storage and sharing.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Restrictions Section -->
+  <section id="restrictions" class="section">
+    <div class="container">
+      <h2>Prohibited Activities</h2>
+      <div class="split">
+        <div class="card-grid">
+          <div class="card">
+            <h3>🚫 Illegal Use</h3>
+            <p>You may not use PiCloud to distribute unlawful, harmful, or malicious content.</p>
+          </div>
+          <div class="card">
+            <h3>⚠️ Misuse</h3>
+            <p>Abuse of storage, attempts to hack, or disrupt services are strictly forbidden.</p>
+          </div>
+          <div class="card">
+            <h3>📵 Sharing Restrictions</h3>
+            <p>Do not share your account with others or impersonate another user.</p>
+          </div>
+        </div>
+        <img src="https://as2.ftcdn.net/v2/jpg/03/54/10/21/1000_F_354102149_oBnNQY5qA3as4yP0wGNY2fly3ssDT3v7.jpg" alt="Restrictions illustration">
+      </div>
+    </div>
+  </section>
+
+  <!-- Liability Section -->
+  <section id="liability" class="section">
+    <div class="container">
+      <h2>Limitations of Liability</h2>
+      <div class="split">
+        <img src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=1000&auto=format&fit=crop" alt="Liability illustration">
+        <div class="card-grid">
+          <div class="card">
+            <h3>⚖️ Service Availability</h3>
+            <p>While we strive for uptime, PiCloud does not guarantee uninterrupted access.</p>
+          </div>
+          <div class="card">
+            <h3>💼 Limitation</h3>
+            <p>We are not liable for indirect damages arising from service use.</p>
+          </div>
+          <div class="card">
+            <h3>🛠️ Third-Party Services</h3>
+            <p>PiCloud may integrate with third-party apps. We are not responsible for their practices.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Callout -->
+  <section id="contact" class="section">
+    <div class="container">
+      <div class="callout">
+        <h2>Questions About Terms?</h2>
+        <p>Contact us at <a href="mailto:support@picloud.com" style="color:var(--brand);font-weight:600;">support@picloud.com</a> for more details.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container foot">
+      <div>© 2025 PiCloud. All rights reserved.</div>
+      <div class="links">
+        <a href="{% url 'index' %}">Privacy</a>
+        <a href="{% url 'terms' %}">Terms</a>
+        <a href="{% url 'security' %}">Security</a>
+        <a href="{% url 'support' %}">Support</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
